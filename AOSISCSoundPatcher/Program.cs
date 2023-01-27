@@ -21,14 +21,10 @@ namespace AOSISCSoundPatcher
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
             bool iscActive = state.LoadOrder.ContainsKey(ImmersiveSoundsCompendium.ModKey);
-            bool aosActive = state.LoadOrder.ContainsKey(AudioOverhaulSkyrim.ModKey);
 
-            if (!iscActive && !aosActive)
-                throw new Exception("This patcher won't function without either Immersive Sounds Compendium or Audio Overhaul Skyrim! Either don't use this patcher or use one of the above mods to let it function.");
             if (iscActive)
                 Console.WriteLine("Detected Immersive Sounds Compendium.");
-            if (aosActive)
-                Console.WriteLine("Detected Audio Overhaul for Skyrim.");
+
 
             if (iscActive)
             {
@@ -78,21 +74,6 @@ namespace AOSISCSoundPatcher
                     if (weapon.Keywords == null) continue;
 
                     var weaponCopy = weapon.DeepCopy();
-
-                    if (aosActive)
-                    {
-                        if (weapon.Keywords.Contains(Skyrim.Keyword.WeapTypeDagger) && weapon.Data != null && !weapon.Data.Flags.HasFlag(WeaponData.Flag.BoundWeapon))
-                        {
-                            weaponCopy.ImpactDataSet.SetTo(AudioOverhaulSkyrim.WPNzBlade1HandSmallImpactSet);
-                            weaponCopy.EquipSound.SetTo(Skyrim.SoundDescriptor.WPNBlade1HandSmallDrawSD);
-                            weaponCopy.UnequipSound.SetTo(Skyrim.SoundDescriptor.WPNBlade1HandSmallSheatheSD);
-                        }
-
-                        var changed = weapon.ImpactDataSet.FormKey != weaponCopy.ImpactDataSet.FormKey || weapon.EquipSound.FormKey != weaponCopy.EquipSound.FormKey || weapon.UnequipSound.FormKey != weaponCopy.UnequipSound.FormKey;
-
-                        if (changed)
-                            state.PatchMod.Weapons.Set(weaponCopy);
-                    }
 
                     if (weapon.Keywords.Contains(Skyrim.Keyword.WeapTypeBattleaxe))
                     {
@@ -147,30 +128,6 @@ namespace AOSISCSoundPatcher
                     if (magicEffect.Projectile == null) continue;
 
                     var magicEffectCopy = magicEffect.DeepCopy();
-
-                    if (aosActive)
-                    {
-                        if (AudioOverhaulSkyrim.Projectiles.TryGetValue(magicEffect.Projectile.FormKey, out var replacerProjectile) && replacerProjectile != null)
-                            magicEffectCopy.Projectile.SetTo(replacerProjectile);
-
-                        if (AudioOverhaulSkyrim.Explosions.TryGetValue(magicEffect.Explosion.FormKey, out var replacerExplosion) && replacerExplosion != null)
-                            magicEffectCopy.Explosion.SetTo(replacerExplosion);
-                        /*
-                        WIP - Replace explosion properties in scripts (dwarven spider summons) (reference formkey: 0004EFC6)
-                        foreach (var script in magicEffectCopy.VirtualMachineAdapter.Scripts)
-                        {
-                            foreach (var property in script.Properties)
-                            {
-                                property.
-                                foreach (var containedFormLink in property.ContainedFormLinks)
-                                {
-                                    if (Replacers.Explosions.TryGetValue(containedFormLink.FormKey, out var replacerExplosion)
-                                        containedFormLink.
-                                }
-                            }
-                        }
-                        */
-                    }
 
                     if (magicEffect.Projectile.FormKey != magicEffectCopy.Projectile.FormKey || magicEffect.Explosion.FormKey != magicEffectCopy.Explosion.FormKey)
                         state.PatchMod.MagicEffects.Set(magicEffectCopy);

@@ -1,8 +1,11 @@
 {
-  "Nickname": "AOSISCSoundPatcher",
+  "Nickname": "ISC Patcher",
   "Visibility": "Visible",
-  "OneLineDescription": "Apply the changes from Audio Overhaul Skyrim / Immersive Sound Compendium to all your mods",
-  "LongDescription": "Doesn't require both mods to be installed, just one of them. Adds sound effects to all weapons & armor in your load order to make it consistent with the changes from these mods.",
+  "OneLineDescription": "Apply the changes from  Immersive Sound Compendium to all your mods",
+  "LongDescription": "Requires Immersive Sounds Compendium",
   "PreferredAutoVersioning": "Default",
-  "RequiredMods": []
+  "RequiredMods": [],
+  "TargetedReleases": [
+    "SkyrimSE"
+  ]
 }
